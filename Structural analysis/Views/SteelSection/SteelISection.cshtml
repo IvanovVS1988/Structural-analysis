@@ -1,0 +1,143 @@
+﻿@model Structural_analysis.ViewModel.SteelISectionModel
+
+@{
+    ViewData["Title"] = "Расчет стального моста";
+}
+<link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
+
+<h1>Расчет стального моста (двутавр без ортотропной плиты)</h1>
+    <h3>Введите исходные данные</h3><br />
+<div class="bridge">
+    @using (Html.BeginForm("SteelISection", "SteelSection"))
+    {
+        <div>
+            <h4>Общие данные</h4>
+            <label for="m">Коэффициент условий работы по таблице 8.15</label>
+            <input type="text" name="m" required minlength="1" maxlength="4" size="10"><br /><br />
+            <label for="steelType">Тип стали</label>
+            <select name="steelType">
+                <option value="0">--Тип стали--</option>
+                <option value="1">16Д</option>
+                <option value="2">15ХСНД</option>
+                <option value="3">10ХСНД</option>
+            </select> <br /><br />
+
+            <h4>Усилия</h4>
+            <label for="Mmax">M<sub>max</sub>(тс*м) </label>
+            <input type="text" name="Mmax" required minlength="1" maxlength="8" size="10">
+            <label for="Q1">Q<sub>1соотв</sub>(тс)</label>
+            <input type="text" name="Q1" required minlength="1" maxlength="8" size="10"> <br /><br />
+
+            <label for="Mmin">M<sub>min</sub>(тс*м) </label>
+            <input type="text" name="Mmin" required minlength="1" maxlength="8" size="10">
+            <label for="Q2">Q<sub>2соотв</sub>(тс)</label>
+            <input type="text" name="Q2" required minlength="1" maxlength="8" size="10"> <br /><br />
+
+            <h4>Верхний пояс</h4>
+            <label for="width1Top">Ширина1</label>
+            <input type="text" name="width1Top" required minlength="1" maxlength="6" size="10">
+            <label for="thick1Top">Толщина1</label>
+            <input type="text" name="thick1Top" required minlength="1" maxlength="6" size="10"> <br /><br />
+
+            <label for="width2Top">Ширина2</label>
+            <input type="text" name="width2Top" required minlength="1" maxlength="6" size="10">
+            <label for="thick2Top">Толщина2</label>
+            <input type="text" name="thick2Top" required minlength="1" maxlength="6" size="10"> <br /><br />
+
+            <label for="width3Top">Ширина3</label>
+            <input type="text" name="width3Top" required minlength="1" maxlength="6" size="10">
+            <label for="thick3Top">Толщина3</label>
+            <input type="text" name="thick3Top" required minlength="1" maxlength="6" size="10"><br /><br />
+
+            <h4>Стенка балки</h4>
+            <label for="wallHeight">Высота</label>
+            <input type="text" name="wallHeight" required minlength="1" maxlength="6" size="10">
+            <label for="wallThick">Толщина</label>
+            <input type="text" name="wallThick" required minlength="1" maxlength="6" size="10"><br /><br />
+
+            <h4>Нижний пояс</h4>
+            <label for="width1Bottom">Ширина1</label>
+            <input type="text" name="width1Bottom" required minlength="1" maxlength="6" size="10">
+            <label for="thick1Bottom">Толщина1</label>
+            <input type="text" name="thick1Bottom" required minlength="1" maxlength="6" size="10"> <br /><br />
+
+            <label for="width2Bottom">Ширина2</label>
+            <input type="text" name="width2Bottom" required minlength="1" maxlength="6" size="10">
+            <label for="thick2Bottom">Толщина2</label>
+            <input type="text" name="thick2Bottom" required minlength="1" maxlength="6" size="10"> <br /><br />
+
+            <label for="width3Bottom">Ширина3</label>
+            <input type="text" name="width3Bottom" required minlength="1" maxlength="6" size="10">
+            <label for="thick3Bottom">Толщина3</label>
+            <input type="text" name="thick3Bottom" required minlength="1" maxlength="6" size="10"><br /><br />
+            <input type="submit" value="Рассчитать" />
+        </div>        
+    }
+</div>
+<div class="bridge">
+    <div>
+        <img id="img2" src=~/img/SteelISection/Ibeam.jpg />
+    </div>
+    <div>
+        <h4>Резльтаты расчета</h4>
+        @{
+            if (Math.Abs(Model.SigmaXMaxTop) > Math.Abs(Model.SigmaXMinTop))
+            {
+                if (Math.Abs(Model.SigmaXMaxTop) <= Model.Ry)
+                {
+                    <p>Напряжения &#963;<sub>в</sub>= @Math.Round(Model.SigmaXMaxTop, 2) кг/см<sup>2</sup> &#8804; @Model.Ry кг/см<sup>2</sup></p>
+                }
+                else
+                {
+                    <p>Напряжения &#963;<sub>в</sub>= @Math.Round(Model.SigmaXMaxTop, 2) кг/см<sup>2</sup> &#8805; @Model.Ry кг/см<sup>2</sup></p>
+                }
+            }
+            else
+            {
+                if (Math.Abs(Model.SigmaXMinTop) <= Model.Ry)
+                {
+                    <p>Напряжения &#963;<sub>в</sub>= @Math.Round(Model.SigmaXMinTop, 2) кг/см<sup>2</sup> &#8804; @Model.Ry кг/см<sup>2</sup></p>
+                }
+                else
+                {
+                    <p>Напряжения &#963;<sub>в</sub>= @Math.Round(Model.SigmaXMinTop, 2) кг/см<sup>2</sup> &#8805; @Model.Ry кг/см<sup>2</sup></p>
+                }
+            }
+            if (Math.Abs(Model.SigmaXMaxBottom) > Math.Abs(Model.SigmaXMinBottom))
+            {
+                if (Math.Abs(Model.SigmaXMaxBottom) <= Model.Ry)
+                {
+                    <p>Напряжения &#963;<sub>н</sub>= @Math.Round(Model.SigmaXMaxBottom, 2) кг/см<sup>2</sup> &#8804; @Model.Ry кг/см<sup>2</sup></p>
+                }
+                else
+                {
+                    <p>Напряжения &#963;<sub>н</sub>= @Math.Round(Model.SigmaXMaxBottom, 2) кг/см<sup>2</sup> &#8805; @Model.Ry кг/см<sup>2</sup></p>
+                }
+            }
+            else
+            {
+                if (Math.Abs(Model.SigmaXMinBottom) <= Model.Ry)
+                {
+                    <p>Напряжения &#963;<sub>н</sub>= @Math.Round(Model.SigmaXMinBottom, 2) кг/см<sup>2</sup> &#8804; @Model.Ry кг/см<sup>2</sup></p>
+                }
+                else
+                {
+                    <p>Напряжения &#963;<sub>н</sub>= @Math.Round(Model.SigmaXMinBottom, 2) кг/см<sup>2</sup> &#8805; @Model.Ry кг/см<sup>2</sup></p>
+                }
+            }
+        }
+        <h5>Подробный вывод</h5>
+        <table>
+            <tr><th></th><th>M<sub>max</sub>Q<sub>1соотв</sub> </th><th> M<sub>min</sub>Q<sub>2соотв</sub></th></tr>
+            <tr><td>Нормальные напряжения &#963;<sub>в</sub>=</td><td>@Math.Round(Model.SigmaXMaxTop, 2) кг/см<sup>2</sup></td><td>@Math.Round(Model.SigmaXMinTop, 2) кг/см<sup>2</sup></td></tr>
+            <tr><td>Нормальные напряжения &#963;<sub>н</sub>=</td><td>@Math.Round(Model.SigmaXMaxBottom, 2) кг/см<sup>2</sup></td><td>@Math.Round(Model.SigmaXMinBottom, 2) кг/см<sup>2</sup></td></tr>
+            <tr><td>Касательные напряжения &#964;<sub>m</sub>=</td><td>@Math.Round(Model.TauM1, 2) кг/см<sup>2</sup></td><td>@Math.Round(Model.TauM2, 2) кг/см<sup>2</sup></td></tr>
+            <tr><td>Коэффициент &#1008;<sub>1</sub>=</td><td>@Math.Round(Model.kappa1, 3)</td><td>@Math.Round(Model.kappa1, 3)</td></tr>
+            <tr><td>Коэффициент &#1008;=</td><td>@Math.Round(Model.kappa_1, 3)</td><td>@Math.Round(Model.kappa_2, 3)</td></tr>
+            <tr><td>Предельная поперечная сила Q<sub>u</sub>=</td><td>@Math.Round(Model.Qcritical1 / 1000, 3) тс</td><td>@Math.Round(Model.Qcritical2 / 1000, 3) тс</td></tr>
+            <tr><td>Момент инерции I=</td><td colspan="2">@Math.Round(Model.momentOfInertion,4) см<sup>4</sup></td></tr>
+            <tr><td>Расстояние до центра тяжести y=</td><td colspan="2">@Math.Round(Model.yMassCentre, 2) см</td></tr>
+        </table>       
+    </div>
+</div>
+  

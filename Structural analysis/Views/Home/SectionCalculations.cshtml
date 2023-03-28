@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Расчеты сечений";
+}
+<h1>@ViewData["Title"]</h1>
+<div>
+    <ul>
+        <li>
+            <h3>Стальные мосты</h3>
+            <ul>
+                <li><a asp-area="" asp-controller="SteelSection" asp-action="SteelISection">Балочный мост (без ортотропной плиты)</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Балочный мост (с ортотропной плитой)</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Ферма</a></li>
+            </ul>
+        </li>
+        <li>
+            <h3>Сталежелезобетонные мосты</h3>
+            <ul>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Двутавровое сечение</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Коробчатое сечение</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Ферма</a></li>
+            </ul>
+        </li>
+        <li>
+            <h3>Железобетонные мосты</h3>
+            <ul>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Типовой проект (без предварительного натяжения)</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Типовой проект (с предварительным натяжением)</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Коробчатое сечение (без предварительного натяжения)</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="InWork">Коробчатое сечение (с предварительным натяжением)</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
