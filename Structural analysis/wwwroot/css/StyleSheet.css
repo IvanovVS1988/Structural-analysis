@@ -14,3 +14,8 @@
 .bridge td, th{
     padding-right: 20px;
 }
+
+.inputStrengthTable td, th {
+    border: 1px solid grey;
+    padding-right: 20px;
+}

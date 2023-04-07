@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing.Constraints;
-using System.Runtime.CompilerServices;
-
-namespace Structural_analysis.Models.SteelBeams
+﻿namespace Structural_analysis.Models.SteelBeams
 {
-    public class StrengthSteelISection : SteelISection
+    public class StrengthSteelISectionOrtPlate: SteelISectionOrtPlate
     {
         const int MConvert = 100000; //перевод момента из тс*м в кгс*см
         const int QConvert = 1000; //перевод поперечной силы из тс в кгс
@@ -31,11 +28,18 @@ namespace Structural_analysis.Models.SteelBeams
                                 new double[] { 1.015, 1.015, 1.016, 1.017, 1.018, 1.018 }
                                };
 
-        public StrengthSteelISection(double width1Top, double thick1Top, double width2Top, double thick2Top, double width3Top, 
-            double thick3Top, double width1Bottom, double thick1Bottom, double width2Bottom, double thick2Bottom, double width3Bottom, 
-            double thick3Bottom, double wallHeight, double wallThick, int steelType, double Mmax, double Q1, double Mmin, double Q2, double m) 
-            : base(width1Top, thick1Top, width2Top, thick2Top, width3Top, thick3Top, width1Bottom, thick1Bottom, width2Bottom, thick2Bottom, 
-                  width3Bottom, thick3Bottom, wallHeight, wallThick, steelType)
+        public StrengthSteelISectionOrtPlate(double width1Top, double thick1Top, double width2Top, double thick2Top, double width3Top,
+            double thick3Top, double width1Bottom, double thick1Bottom, double width2Bottom, double thick2Bottom, double width3Bottom,
+            double thick3Bottom, double wallHeight, double wallThick, double widthOrtPlateTopLeft, double thickOrtPlateTopLeft, double widthOrtPlateTopRight,
+            double thickOrtPlateTopRight, double widthOrtPlateBottomLeft, double thickOrtPlateBottomLeft, double widthOrtPlateBottomRight,
+            double thickOrtPlateBottomRight, double hStringerTop, double thickStringerTop, int numberOfTopStringersLeft, int numberOfTopStringersRight,
+            double hStringerBottom, double thickStringerBottom, int numberOfBottomStringersLeft, int numberOfBottomStringersRight,
+            double yOrtPlateTop, double yOrtPlateBottom, int steelType, double Mmax, double Q1, double Mmin, double Q2, double m)
+            : base(width1Top, thick1Top, width2Top, thick2Top, width3Top, thick3Top, width1Bottom, thick1Bottom, width2Bottom, thick2Bottom,
+                  width3Bottom, thick3Bottom, wallHeight, wallThick, widthOrtPlateTopLeft, thickOrtPlateTopLeft, widthOrtPlateTopRight,
+            thickOrtPlateTopRight, widthOrtPlateBottomLeft, thickOrtPlateBottomLeft, widthOrtPlateBottomRight, thickOrtPlateBottomRight, 
+            hStringerTop, thickStringerTop, numberOfTopStringersLeft, numberOfTopStringersRight, hStringerBottom, thickStringerBottom, 
+            numberOfBottomStringersLeft, numberOfBottomStringersRight, yOrtPlateTop, yOrtPlateBottom, steelType)
         {
             this.Mmax = Mmax * MConvert;
             this.Q1 = Q1 * QConvert;
@@ -73,7 +77,7 @@ namespace Structural_analysis.Models.SteelBeams
             {
                 Arows = AreaBottom / AreaWall;
             }
-            else 
+            else
             {
                 Arows = AreaTop / AreaWall;
             }
@@ -286,12 +290,12 @@ namespace Structural_analysis.Models.SteelBeams
                 double kappaMedium2 = value4 - (value4 - value2) * (ArowsDown - Arows) / (ArowsDown - ArowsUp);
                 kappa1 = kappaMedium2 - (kappaMedium2 - kappaMedium1) * (AcolumnsRight - Acolumns) / (AcolumnsRight - AcolumnsLeft);
             }
-            catch(IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException e)
             {
                 return kappa1 = 1;
             }
             return kappa1;
-        } 
+        }
 
         public double kappa(double Q) //SP number 8.26
         {
@@ -320,9 +324,9 @@ namespace Structural_analysis.Models.SteelBeams
         public double SigmaXBottom(double M, double Q) //SP formula 8.5
         {
             double SigmaXBottom;
-            
+
             SigmaXBottom = M * YMassCentre / (kappa(Q) * MomentOfInertionX);
-            
+
             return SigmaXBottom;
         }
         public double SigmaXTop(double M, double Q) //SP formula 8.5

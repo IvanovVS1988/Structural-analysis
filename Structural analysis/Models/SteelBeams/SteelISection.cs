@@ -13,6 +13,16 @@
         protected int steelType;
         public double Rs { get; set; }
         public double Ry { get; set; }
+        public double Area { get; set; }
+        public double AreaTop { get; set; }
+        public double AreaBottom { get; set; }
+        public double AreaWall { get; set; }
+        public double StaticMoment { get; set; }
+        public double StaticMomentHalfSection { get; set; }
+        public double StaticMomentBottomOfWall { get; set; }
+        public double StaticMomentTopOfWall { get; set; }
+        public double YMassCentre { get; set; }
+        public double MomentOfInertionX { get; set; }
         public SteelISection(double width1Top, double thick1Top, double width2Top, double thick2Top, double width3Top, double thick3Top,
             double width1Bottom, double thick1Bottom, double width2Bottom, double thick2Bottom, double width3Bottom, double thick3Bottom,
             double wallHeight, double wallThick, int steelType)
@@ -47,7 +57,17 @@
                 Ry = 3550;
                 Rs = 0.58 * 3976.83 / 1.125;
             }
-        }
+            Area = area();
+            AreaTop = areaTop(); 
+            AreaBottom = areaBottom();
+            AreaWall = areaWall();
+            StaticMoment = staticMoment();
+            YMassCentre = yMassCentre();
+            StaticMomentHalfSection = staticMomentHalfSection();
+            StaticMomentBottomOfWall = staticMomentBottomOfWall();
+            StaticMomentTopOfWall = staticMomentTopOfWall();           
+            MomentOfInertionX = momentOfInertionX();
+        }       
 
         public double area() //полная площадь
         {
@@ -62,19 +82,19 @@
             return A;
         }
 
-        public double areaBottom()
+        public double areaBottom() //площадь нижнего пояса
         {
             double A = width1Bottom * thick1Bottom + width2Bottom * thick2Bottom + width3Bottom * thick3Bottom;
             return A;
         }
 
-        public double areaWall()
+        public double areaWall() //площадь стенки
         {
             double A = wallHeight * wallThick;
             return A;
         }
 
-        public double staticMoment()
+        public double staticMoment() //статический момент инерции относительно осм 0-0
         {
             double S;
             S = width3Bottom * thick3Bottom * thick3Bottom / 2 + width2Bottom * thick2Bottom * (thick2Bottom / 2 + thick3Bottom) +
@@ -86,17 +106,29 @@
             return S;
         }
 
+        public double yMassCentre()
+        {
+            double y;
+            y = StaticMoment / Area;
+            return y;
+        }
+
+        public double xMassCentre()
+        {
+            return 0;
+        }
+
         public double staticMomentHalfSection() //отсеченный момент инерции по центру тяжести нижгнй части
         {
             double S0, S, yCentre;
             S0 = width3Bottom * thick3Bottom * thick3Bottom / 2 + width2Bottom * thick2Bottom * (thick2Bottom / 2 + thick3Bottom) +
                 width1Bottom * thick1Bottom * (thick1Bottom / 2 + thick2Bottom + thick3Bottom) +
-                (yMassCentre() - thick3Bottom - thick2Bottom - thick1Bottom) * wallThick *
-                ((yMassCentre() - thick3Bottom - thick2Bottom - thick1Bottom) / 2 + thick3Bottom + thick2Bottom + thick1Bottom);
+                (YMassCentre - thick3Bottom - thick2Bottom - thick1Bottom) * wallThick *
+                ((YMassCentre - thick3Bottom - thick2Bottom - thick1Bottom) / 2 + thick3Bottom + thick2Bottom + thick1Bottom);
             double area = width3Bottom * thick3Bottom + width2Bottom * thick2Bottom + width1Bottom * thick1Bottom +
-                 (yMassCentre() - thick3Bottom - thick2Bottom - thick1Bottom) * wallThick;
+                 (YMassCentre - thick3Bottom - thick2Bottom - thick1Bottom) * wallThick;
             yCentre = S0 / area;
-            S = area * (yMassCentre() - yCentre);
+            S = area * (YMassCentre - yCentre);
             return S;
         }
 
@@ -107,7 +139,7 @@
                 width1Bottom * thick1Bottom * (thick1Bottom / 2 + thick2Bottom + thick3Bottom);
             double area = width3Bottom * thick3Bottom + width2Bottom * thick2Bottom + width1Bottom * thick1Bottom;
             yCentre = S0 / area;
-            S = area * (yMassCentre() - yCentre);
+            S = area * (YMassCentre - yCentre);
             return S;
         }
 
@@ -117,29 +149,16 @@
             S0 = width3Top * thick3Top * thick3Top / 2 + width2Top * thick2Top * (thick2Top / 2 + thick3Top) +
                 width1Top * thick1Top * (thick1Top / 2 + thick2Top + thick3Top);
             double area = width3Top * thick3Top + width2Top * thick2Top + width1Top * thick1Top;
-            yCentreTop = thick3Bottom + thick2Bottom + thick1Bottom + wallHeight + thick1Top + thick2Top + thick3Top - yMassCentre();
+            yCentreTop = thick3Bottom + thick2Bottom + thick1Bottom + wallHeight + thick1Top + thick2Top + thick3Top - YMassCentre;
             yCentre = S0 / area;
             S = area * (yCentreTop - yCentre);
             return S;
-
-        }
-
-        public double yMassCentre()
-        {
-            double y;
-            y = staticMoment() / area();
-            return y;
-        }
-
-        public double xMassCentre()
-        {
-            return 0;
         }
 
         public double momentOfInertionX()
         {
             double totalHeight = thick3Bottom + thick2Bottom + thick1Bottom + wallHeight + thick1Top + thick2Top + thick3Top;
-            double y1 = yMassCentre();
+            double y1 = YMassCentre;
             double y2 = totalHeight - y1;
             double I;
 

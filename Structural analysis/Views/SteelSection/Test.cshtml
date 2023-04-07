@@ -1,0 +1,24 @@
+﻿@model Structural_analysis.ViewModel.SteelISectionOrtPlateModel
+
+@{
+    ViewData["Title"] = "Расчет стального моста";
+}
+<link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
+
+<html>
+<head>
+</head>
+<body>
+    <div id="tab">
+        <span>Сечения двутавра</span>
+        <span>Верх. ортот. плита</span>
+        <span>Ниж. ортот. плита</span>
+    </div>
+    <table class="inputStrengthTable">
+        <tr><th rowspan="2">№ сечения</th><th colspan="6">Верхний пояс</th><th colspan="6">Нижний пояс</th><th colspan="2">Стенка</th></tr>
+        <tr><th>Ширина1</th><th>Толщ1</th><th>Ширина2</th><th>Толщ2</th><th>Ширина3</th><th>Толщ3</th><th>Ширина1</th><th>Толщ1</th><th>Ширина2</th><th>Толщ2</th><th>Ширина3</th><th>Толщ3</th><th>Высота</th><th>Толщ</th></tr>
+    </table>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/SteelISectionOrtPlate/script.js"></script>
+</body>
+</html>
